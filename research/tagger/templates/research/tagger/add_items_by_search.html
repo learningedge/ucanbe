@@ -1,0 +1,73 @@
+{% extends "site_base.html" %}
+{% block extra_style %}
+    {{ block.super }}
+    <style>
+    .thumbnail {
+        max-height: 200px;
+        overflow: hidden;
+        height: 200px;
+    }    
+    .thumbnail-delete {
+        display: block;
+        color: white;
+        background-color: red;
+        padding: 2px;
+        border-radius: 2px;
+    }    
+    </style>
+{% endblock %}
+{% block body %}
+<p><a href="{% url tagger_list_amazon_cached_items %}">Back to list</a></p>
+<form action="" method="post">
+{{ form }}
+{% csrf_token %}
+<input type="submit"/>
+</form>
+{% if results %}
+<form action="{% url tagger_add_amazon_cached_item_delete %}" method="post">
+    {% csrf_token %}
+    {{ delete_formset.management_form }}
+    {% for delete_form in delete_formset %}
+    <div class="delete_form" 
+        id="delete_form_{{ delete_form.asin.value }}"
+        style="display: none">
+        {{ delete_form.asin }}
+        {{ delete_form.delete }}
+    </div>
+    {% endfor %}
+    <input type="submit" value="Delete marked items">
+</form>
+<ul class="thumbnails">
+{% for result in results %}
+    <li class="span2">
+        <div class="thumbnail" id="thumbnail_{{ result.asin }}">
+            <span class="thumbnail-delete">Mark to delete</span>
+            <a href="{% url tagger_detail_amazon_cached_item result.asin %}"><img src="{{ result.small_image.url }}" width="{{ result.small_image.width }}" height="{{ result.small_image.height }}"/></a>
+            <h5>{{ result.title }}</h5>
+            <p>{{ result.browse_nodes }}</p>
+            <p>{{ result.contents }}</p>
+        </div>
+    </li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
+{% block extra_postscript %}
+    {{ block.super }}
+    <script>
+    $(".thumbnails").on("click", ".thumbnail-delete", function(ev) {
+        var asin = $($(this).parent()).attr("id").split("_")[1],
+        form = $("#delete_form_" + asin),
+        input = form.find("input")[1],
+        value = $(input).val();
+        if (value === "True") {
+            $(input).val("False");
+            $($(this).parent()).css("background-color", "transparent");
+        }
+        else {
+            $(input).val("True");
+            $($(this).parent()).css("background-color", "#ffcccc");
+        }
+    })
+    </script>
+{% endblock %}

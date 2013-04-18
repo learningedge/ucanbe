@@ -1,0 +1,24 @@
+# project.txt is a pip requirements file which describes the distributions
+# required by your project to run.
+
+--requirement=base.txt
+
+# Put project-specific requirements here.
+# See http://pip-installer.org/requirement-format.html for more information.
+-e git://github.com/mikeedwards/djurk.git#egg=djurk
+ipython
+-e git://github.com/django-extensions/django-extensions.git#egg=django-extensions
+django-profiles
+django-registration
+django-mptt
+django-dajaxice
+gunicorn
+PIL
+-e git://github.com/flenter/redisco.git#egg=redisco
+jinja2
+jingo
+south
+Werkzeug
+bottlenose
+feedparser
+django-tastypie

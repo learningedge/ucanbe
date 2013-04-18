@@ -1,0 +1,1 @@
+[{% for tag in tags %}{"name":"{{ tag.name }}", "description":"{{ tag.description }}"}{% if not forloop.last %},{% endif %}{%endfor %}]

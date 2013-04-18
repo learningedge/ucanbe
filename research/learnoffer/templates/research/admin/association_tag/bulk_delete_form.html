@@ -1,0 +1,21 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}<div class="breadcrumbs">
+    <a href="{% url admin:index %}">{% trans "Home" %}</a> &rsaquo;
+    <a href="{% url admin:learnoffer_associationtag_changelist %}">{% trans "Association Tags" %}</a> &rsaquo;
+    Delete tags
+</div>{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <p>{% blocktrans %}Delete as many tags as you want, one per line.{% endblocktrans %}</p>
+    <form method="POST" action="">
+    {% csrf_token %}
+    <div>
+        {{ form.as_p }}
+        <input type="submit" value="Delete tags" />
+    </div>
+    </form>
+</div>
+{% endblock %}

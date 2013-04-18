@@ -1,0 +1,169 @@
+{% extends "site_base.html" %}
+{%load verbatim%}
+{% block title %}Tag Items{% endblock %}
+
+{% block extra_script %}
+{{ block.super }}
+    <script>
+        AFFINITY_TAG_API = "{%url api_dispatch_list resource_name="affinity_tag" api_name="v1"%}";
+        ITEM_API = "{%url api_dispatch_list resource_name="item" api_name="v1"%}";
+        REQUIREMENT_TAG_API = "{%url api_dispatch_list resource_name="requirement_tag" api_name="v1"%}";
+    </script>
+    {%verbatim%}
+    <script type="text/template" id="affinity-tag-template">
+            <p class="name">
+            <%=name %>
+            </p>
+    </script>
+    <script type="text/template" id="item-template">
+            <p class="name">
+            <%=source_id %>
+            </p>
+    </script>
+    <script type="text/template" id="requirement-tag-template">
+            <p class="name">
+            <%=name %>
+            </p>
+    </script>
+    {%endverbatim%}
+{% endblock %}
+
+{% block body %}
+        <section id="app" class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h1>Tagging</h1>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span4">
+                    <form id="input" class="form-vertical" method="POST">
+                        <fieldset>
+                            <legend>Start tagging here</legend>
+                            <div class="control-group">
+                                <label for="message" class="control-label">Affinity Tags</label>
+                                <div class="controls">
+                                    <input id="affinity-field" name="affinity_field"/>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label for="message" class="control-label">Requirement Tags</label>
+                                <div class="controls">
+                                    <input id="requirement-field" name="requirement_field"/>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <button class="save-button">Save</button>
+                            </div>
+                        </fieldset>
+                        {% csrf_token %}
+                    </form>
+                </div>
+                <div id="objects" class="span8">
+                </div>
+            </div>
+        </section>
+        <div id="choice">Choose a level</div>
+{% endblock %}
+
+{% block extra_postscript %}
+{{ block.super }}
+<script src="{{STATIC_URL}}js/app.js"></script>
+<script>
+$(function() {
+    function split( val ) {
+        return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+        return split( term ).pop();
+    }
+
+    $( "#affinity-field" )
+        // don't navigate away from the field on tab when selecting an item
+        .bind( "keydown", function( event ) {
+            if ( event.keyCode === $.ui.keyCode.TAB &&
+                    $( this ).data( "autocomplete" ).menu.active ) {
+                event.preventDefault();
+            }
+        })
+        .autocomplete({
+            source: function( request, response ) {
+                $.getJSON( "{% url tagger_list_affinity_tags_json %}", {
+                    term: extractLast( request.term )
+                }, response );
+            },
+            minLength: 0,
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function( event, ui ) {
+                var terms = split( this.value );
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push( ui.item.value );
+                // add placeholder to get the comma-and-space at the end
+                terms.push( "" );
+                this.value = terms.join( ", " );
+                return false;
+            }
+        });
+    $( "#requirement-field" )
+        // don't navigate away from the field on tab when selecting an item
+        .bind( "keydown", function( event ) {
+            if ( event.keyCode === $.ui.keyCode.TAB &&
+                    $( this ).data( "autocomplete" ).menu.active ) {
+                event.preventDefault();
+            }
+        })
+        .autocomplete({
+            source: function( request, response ) {
+                $.getJSON( "{% url tagger_list_requirement_tags_json %}", {
+                    term: extractLast( request.term )
+                }, response );
+            },
+            minLength: 0,
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function( event, ui ) {
+                var terms = split( this.value );
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push( ui.item.value );
+                // add placeholder to get the comma-and-space at the end
+                terms.push( "" );
+                $("#choice").dialog({
+                  buttons : {
+                    "Level 0" : function() {
+                        $(this).dialog("close");
+                    },
+                    "Level 1" : function() {
+                        $(this).dialog("close");
+                    },
+                    "Level 2" : function() {
+                        $(this).dialog("close");
+                    },
+                    "Level 3" : function() {
+                        $(this).dialog("close");
+                    },
+                    "Level 4" : function() {
+                        $(this).dialog("close");
+                    },
+                    "Level 5" : function() {
+                        $(this).dialog("close");
+                    }
+                  }
+                });
+
+                //alert("Pick a level");
+                this.value = terms.join( ", " );
+                return false;
+            }
+        });
+});
+</script>
+{% endblock %}

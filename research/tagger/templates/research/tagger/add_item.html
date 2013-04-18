@@ -1,0 +1,39 @@
+{% extends "site_base.html" %}
+{% block body %}
+<p><a href="{% url tagger_list_amazon_cached_items %}">Back to list</a></p>
+<form action="" method="POST">
+{{ form }}
+{% csrf_token %}
+<input type="submit"/>
+</form>
+<h1>{{ title }}</h1>
+<img style="display: block; float: left;" src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}"/>
+<dl>
+    <dt>Minimum Age</dt>
+    <dd>{{ min_age }}</dd>
+    <dt>Maximum Age</dt>
+    <dd>{{ max_age }}</dd>
+    <dt>ASIN</dt>
+    <dd>{{ asin }}</dd>
+    <dt>UPC</dt>
+    <dd>{{ upc }}</dd>
+    <dt>EAN</dt>
+    <dd>{{ ean }}</dd>
+    <dt>Price</dt>
+    <dd>{{ price }}</dd>
+    <dt>Brand</dt>
+    <dd>{{ brand }}</dd>
+    <dt>Label</dt>
+    <dd>{{ label }}</dd>
+    <dt>Publisher</dt>
+    <dd>{{ publisher }}</dd>
+    <dt>Manufacturer</dt>
+    <dd>{{ manufacturer }}</dd>
+    <dt>Studio</dt>
+    <dd>{{ studio }}</dd>
+</dl>
+{% for content in contents %}
+<p>{{ content }}</p>
+{% endfor %}
+<pre style="display: none">{{ raw_item }}</pre>
+{% endblock %}

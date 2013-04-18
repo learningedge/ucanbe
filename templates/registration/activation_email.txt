@@ -1,0 +1,1 @@
+Welcome to the project!  We're very glad you can join us.  Your activation key is {{activation_key}}.

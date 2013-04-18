@@ -1,0 +1,151 @@
+{% extends "site_base.html" %}
+
+{% block extra_style %}
+{{ block.super }}
+    <style>
+        #affinity-tags-list .noncanonical,
+        #requirement-tags-list .noncanonical {
+            color: #999;
+        }
+        #affinity-tags-list .unsaved,
+        #requirement-tags-list .unsaved {
+            color: #000;
+            background-color: #ddeeff;
+        }
+        #affinity-tags-list li span.delete,
+        #requirement-tags-list li span.delete {
+            background-color: #f00;
+            border-radius: 2px;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            margin: 0 0 0 5px;
+            padding: 1px 3px;
+            text-transform: lowercase;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+        <section id="app" class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h1>Tagging</h1>
+                    <p><a href="{% url tagger_list_amazon_cached_items %}">Back to list</a></p>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div id="item" class="thumbnail span3">
+                    <h3>{{ cache.title }}</h3>
+                    <img src="{{ cache.small_image.url }}" width="{{ cache.small_image.width }}" height="{{ cache.small_image.height }}"/>
+                    <dl>
+                        {% if cache.detail_page_url %}
+                        <dt>URL</dt>
+                        <dd><a href="{{ cache.detail_page_url }}" target="_blank">Go to Amazon.com</a></dd>
+                        {% endif %}
+                        {% if cache.min_age %}
+                        <dt>Minimum Age</dt>
+                        <dd>{{ cache.min_age }} years</dd>
+                        {% endif %}
+                        {% if cache.max_age %}
+                        <dt>Maximum Age</dt>
+                        <dd>{{ cache.max_age }} years</dd>
+                        {% endif %}
+                        {% if cache.asin %}
+                        <dt>ASIN</dt>
+                        <dd>{{ cache.asin }}</dd>
+                        {% endif %}
+                        {% if cache.upc %}
+                        <dt>UPC</dt>
+                        <dd>{{ cache.upc }}</dd>
+                        {% endif %}
+                        {% if cache.ean %}
+                        <dt>EAN</dt>
+                        <dd>{{ cache.ean }}</dd>
+                        {% endif %}
+                        {% if cache.price %}
+                        <dt>Price</dt>
+                        <dd>${{ cache.price }}</dd>
+                        {% endif %}
+                        {% if cache.brand %}
+                        <dt>Brand</dt>
+                        <dd>{{ cache.brand }}</dd>
+                        {% endif %}
+                        {% if cache.label %}
+                        <dt>Label</dt>
+                        <dd>{{ cache.label }}</dd>
+                        {% endif %}
+                        {% if cache.publisher %}
+                        <dt>Publisher</dt>
+                        <dd>{{ cache.publisher }}</dd>
+                        {% endif %}
+                        {% if cache.manufacturer %}
+                        <dt>Manufacturer</dt>
+                        <dd>{{ cache.manufacturer }}</dd>
+                        {% endif %}
+                        {% if cache.studio %}
+                        <dt>Studio</dt>
+                        <dd>{{ cache.studio }}</dd>
+                        {% endif %}
+                    </dl>
+                </div>
+                <div id="contents" class="span3">
+                    <h4>Keywords</h4>
+                    <p>{{ cache.browse_nodes }}</p>
+                    <h4>Description</h4>
+                    <p>{{ cache.contents }}</p>
+                </div>
+                <div id="tags" class="span3">
+                    <h4>Affinity Tags</h4>
+                    <ul id="affinity-tags-list">
+                        {% for affinity_tag in affinity_tags %}
+                        <li{% if not affinity_tag.canonical %} class="noncanonical"{% endif %}><span class="term">{{ affinity_tag }}</span> <span class="delete">X</span></li>
+                        {% endfor %}
+                    </ul>
+                    <h4>Requirement Tags</h4>
+                    <ul id="requirement-tags-list">
+                        {% for tagged_item in requirement_tagged_items %}
+                        <li{% if not tagged_item.tag.canonical %} class="noncanonical"{% endif %} data-term="{{ tagged_item.tag }}::{{ tagged_item.level }}"><span class="term">{{ tagged_item.tag }}, Level {{ tagged_item.level }}</span> <span class="delete">X</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="span3">
+                    <form id="input" class="well form-vertical" method="post">
+                        <fieldset>
+                            <legend>Tag this</legend>
+                            {% csrf_token %}
+                            <div class="control-group">
+                                <input type="text" id="affinity-field" name="affinity_tags" value="" placeholder="affinity tags"/>
+                            </div>
+                            <div class="control-group">
+                                <input type="text" id="requirement-field" name="requirement_tags_display" value="" placeholder="requirement tags"/>
+                            </div>
+                            <div class="control-group">
+                                <input type="submit" value="Save and Continue"/>
+                            </div>
+                            <input type="hidden" id="requirement-data" name="requirement_tags" value="">
+                            <input type="hidden" id="affinity-delete" name="affinity_delete" value="">
+                            <input type="hidden" id="requirement-delete" name="requirement_delete" value="">
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <div id="choice" style="display: none;" title="Choose a level">
+            <p class="description"></p>
+        </div>
+
+
+
+{% endblock %}
+
+{% block extra_postscript %}
+    {{ block.super }}
+    <script>
+        var AFFINITY_TAGS_SOURCE_URL = "{% url tagger_list_affinity_tags_json %}",
+            REQUIREMENT_TAGS_SOURCE_URL = "{% url tagger_list_requirement_tags_json %}",
+            REQUIREMENT_TAG_API = "{%url api_dispatch_list resource_name="requirement_tag" api_name="v1" %}";
+    </script>
+    <script src="{{STATIC_URL}}js/tag_autocomplete.js"></script>    
+{% endblock %}
