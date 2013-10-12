@@ -36,3 +36,19 @@
         <p>{% blocktrans %}You can <a href="{{ login_url }}" class="btn">Log In</a> or <a href="{{ signup_url }}" class="btn primary">Sign Up</a> to try out the site.{% endblocktrans %}</p>
     {% endif %}
 {% endblock %}
+
+{% block body %}
+    <ul>
+        <li><a href="/tagger/backbone/">/tagger/backbone/</a></li>
+        <li><a href="/admin/association_tag/bulk/add/">/admin/association_tag/bulk/add/</a></li>
+        <li><a href="/admin/association_tag/bulk/delete/">/admin/association_tag/bulk/delete/</a></li>
+        <li><a href="/tagger/amazon/cached/add/">/tagger/amazon/cached/add/</a></li>
+        <li><a href="/tagger/amazon/cached/add/by_search/">/tagger/amazon/cached/add/by_search/</a></li>
+        <li><a href="/tagger/amazon/cached/list/">/tagger/amazon/cached/list/</a></li>
+        <li><a href="/tagger/tags/list/">/tagger/tags/list/</a></li>
+        <li><a href="/tagger/tags/affinity/list/">/tagger/tags/affinity/list/</a></li>
+        <li><a href="/tagger/tags/requirement/list/">/tagger/tags/requirement/list/</a></li>
+        <li><a href="/tagger/tags/list/">/tagger/tags/list/</a></li>
+        <li><a href="/tagger/tags/list/">/tagger/tags/list/</a></li>
+    </ul>
+{% endblock %}

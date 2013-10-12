@@ -1,6 +1,6 @@
 import os.path
 # -*- coding: utf-8 -*-
-
+PROJECT_ROOT = os.path.dirname(__file__)
 ADMINS = [
     # ("Your Name", "your_email@domain.com"),
 ]
@@ -18,6 +18,12 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
+STATIC_URL  = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT,'static')
+
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
 # Subdirectory of COMPRESS_ROOT to store the cached media files in
 COMPRESS_OUTPUT_DIR = "cache"
 
@@ -71,7 +77,7 @@ INSTALLED_APPS = [
     "announcements",
     "pagination",
 
-    "djurk",
+    #"djurk",
     "django_extensions",
     "registration",
     "mptt",
@@ -122,3 +128,5 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+DEBUG = True

@@ -15,9 +15,9 @@ from research.tagger.models import AmazonCachedItem, Supplier, Item, \
     AffinityTag, RequirementTag, AmazonCachedImage
 
 from taggit.models import Tag #@UnresolvedImport
-from ucb_project.research.tagger.models import RequirementTaggedItem,\
+from ucb.research.tagger.models import RequirementTaggedItem,\
     AffinityTaggedItem
-from ucb_project.research.tagger.forms import AmazonCachedItemDeleteFormset
+from ucb.research.tagger.forms import AmazonCachedItemDeleteFormset
 from django.contrib.auth.decorators import login_required
 
 
